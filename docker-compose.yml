@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    environment:
+      TODO_ENV: dev
+      PORT: 8080
+      TODO_DB_HOST: db
+      TODO_DB_PORT: 3306
+      TODO_DB_USER: root
+      TODO_DB_PASSWORD: password
+      TODO_DB_NAME: youtube-manager
+    volumes:
+      - .:/app
+    ports:
+      - '18000:8080'
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: youtube-manager
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - '33306:3306'
+
+volumes:
+  mysql-data:

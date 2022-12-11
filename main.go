@@ -1,6 +1,7 @@
 package main
 
 import (
+	"youtube-manager/middlewares"
 	"youtube-manager/routes"
 
 	"github.com/joho/godotenv"
@@ -15,6 +16,7 @@ func main() {
 	// middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
+	e.Use(middlewares.YoutubeService())
 
 	// routes
 	routes.Init(e)

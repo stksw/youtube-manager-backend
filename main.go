@@ -17,6 +17,7 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
 	e.Use(middlewares.YoutubeService())
+	e.Use(middlewares.DatabaseService())
 
 	// routes
 	routes.Init(e)

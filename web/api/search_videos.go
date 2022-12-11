@@ -1,26 +1,26 @@
 package api
 
 import (
-	"fmt"
-
 	"github.com/labstack/echo"
 	"github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
 	"google.golang.org/api/youtube/v3"
 )
 
-func FetchMostPopularVideos() echo.HandlerFunc {
+func SearchVideos() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		yts := c.Get("yts").(*youtube.Service)
+		query := c.QueryParam("q")
 
-		part := []string{"id, snippet"}
-		call := yts.Videos.List(part).Chart("mostPopular").MaxResults(3)
+		call := yts.Search.List([]string{"id", "snippet"}).Q(query).MaxResults(3)
+		pageToken := c.QueryParam("pageToken")
+		if len(pageToken) > 0 {
+			call = call.PageToken(pageToken)
+		}
 		res, err := call.Do()
 		if err != nil {
-			logrus.Fatalf("error calling youtube api: %v", err)
+			logrus.Fatalf("error calling youtube api %v", err)
 		}
-
-		fmt.Println("res", res)
 
 		return c.JSON(fasthttp.StatusOK, res)
 	}
